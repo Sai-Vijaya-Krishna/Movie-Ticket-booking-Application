@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Verification</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2> Verification</h2>
+
+    <input id="mobile" placeholder="Enter Mobile Number">
+    <button class="btn-yellow" onclick="sendOtp()">Send OTP</button>
+
+    <div id="otpBox" style="display:none;">
+        <input id="otp" placeholder="Enter OTP">
+        <button class="btn-yellow" onclick="verifyOtp()">Verify OTP</button>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+<div id="toast" class="toast"></div>
+</body>
+</html>

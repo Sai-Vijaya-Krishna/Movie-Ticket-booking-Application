@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Successful</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="full-center">
+    <div class="container card">
+        <h2>Booking Confirmed</h2>
+
+        <div class="success-detail">Booking ID: <b id="reg"></b></div>
+        <div class="success-detail">City: <b id="location"></b></div>
+        <div class="success-detail">Theatre: <b id="theatre"></b></div>
+        <div class="success-detail">Movie: <b id="movie"></b></div>
+        <div class="success-detail">Show Time: <b id="time"></b></div>
+        <div class="success-detail">Seats Booked: <b id="seats"></b></div>
+        <div class="success-detail">Seat Numbers: <b id="seatNumbers"></b></div>
+        <div class="success-detail">Total Paid: <b id="totalAmount"></b></div>
+        <div class="success-detail">Payment Mode: <b id="paymentMode"></b></div>
+
+    </div>
+</div>
+
+<script>
+    const fields = ["reg", "location", "theatre", "movie", "time", "seats", "seatNumbers", "totalAmount", "paymentMode"];
+    fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el) el.innerText = localStorage.getItem(f) || "N/A";
+    });
+</script>
+
+</body>
+</html>

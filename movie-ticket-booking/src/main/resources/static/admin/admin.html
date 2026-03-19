@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5c518, #ffffff);
+            color: #000;
+        }
+
+        .admin-container {
+            width: 600px;
+            margin: auto;
+            margin-top: 50px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f4c842;
+        }
+
+        .btn-yellow {
+            background-color: #f1c40f;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-red {
+            background-color: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-grid {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 1;
+            padding: 15px;
+            background-color: #f5c518;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "admin-login.html";
+    }
+</script>
+
+<div class="admin-container">
+
+    <h2>Admin Dashboard</h2>
+
+    <div class="admin-grid">
+        <div class="card" onclick="loadUsers()">View Users</div>
+        <div class="card" onclick="loadMoviesAdmin()">Manage Movies</div>
+        <div class="card" onclick="showOfferForm()">Create Offer</div>
+        <div class="card" style="background:#e74c3c;color:white;" onclick="logout()">Logout</div>
+    </div>
+
+    <div id="adminContent"></div>
+
+</div>
+
+<script>
+	
+	function showCreateMovieForm() {
+	    document.getElementById("adminContent").innerHTML = `
+	        <h3>Create New Movie</h3>
+	        <input id="title" placeholder="Title"><br><br>
+	        <input id="genre" placeholder="Genre"><br><br>
+	        <input id="duration" placeholder="Duration"><br><br>
+	        <input id="price" placeholder="Price"><br><br>
+	        <input id="code" placeholder="Code"><br><br>
+	        <button class="btn-yellow" onclick="createMovie()">Create</button>
+	        <button class="btn-red" onclick="loadMoviesAdmin()">Cancel</button>
+	    `;
+	}
+	function createMovie() {
+
+	    const movie = {
+	        title: document.getElementById("title").value,
+	        genre: document.getElementById("genre").value,
+	        duration: document.getElementById("duration").value,
+	        price: document.getElementById("price").value,
+	        code: document.getElementById("code").value
+	    };
+
+	    fetch("/api/admin/movies", {
+	        method: "POST",
+	        headers: {
+	            "Content-Type": "application/json",
+	            "Authorization": "Bearer " + token
+	        },
+	        body: JSON.stringify(movie)
+	    })
+	    .then(() => {
+	        alert("Movie Created Successfully!");
+	        loadMoviesAdmin();
+	    });
+	}
+
+    // ================= USERS =================
+    function loadUsers() {
+        fetch("/api/admin/users", {
+            headers: { "Authorization": "Bearer " + token }
+        })
+        .then(res => res.json())
+        .then(users => {
+            let html = `<table>
+                <tr><th>ID</th><th>Mobile</th><th>Username</th></tr>`;
+            users.forEach(u => {
+                html += `<tr>
+                    <td>${u.id}</td>
+                    <td>${u.mobile}</td>
+                    <td>${u.username}</td>
+                </tr>`;
+            });
+            html += "</table>";
+            document.getElementById("adminContent").innerHTML = html;
+        });
+    }
+
+    // ================= MOVIES =================
+	function loadMoviesAdmin() {
+	    fetch("/api/admin/movies", {
+	        headers: { "Authorization": "Bearer " + token }
+	    })
+	    .then(res => res.json())
+	    .then(movies => {
+
+	        let html = `
+	            <button class="btn-yellow" onclick="showCreateMovieForm()">+ Create Movie</button>
+	            <br><br>
+	            <table>
+	                <tr>
+	                    <th>ID</th>
+	                    <th>Title</th>
+	                    <th>Genre</th>
+	                    <th>Duration</th>
+	                    <th>Price</th>
+	                    <th>Code</th>
+	                    <th>Actions</th>
+	                </tr>`;
+
+	        movies.forEach(m => {
+	            html += `<tr>
+	                <td>${m.id}</td>
+	                <td>${m.title}</td>
+	                <td>${m.genre}</td>
+	                <td>${m.duration}</td>
+	                <td>${m.price}</td>
+	                <td>${m.code}</td>
+	                <td>
+	                    <button class="btn-yellow" onclick="editMovie(${m.id})">Update</button>
+	                    <button class="btn-red" onclick="deleteMovie(${m.id})">Delete</button>
+	                </td>
+	            </tr>`;
+	        });
+
+	        html += "</table>";
+
+	        document.getElementById("adminContent").innerHTML = html;
+	    });
+	}
+
+    function deleteMovie(id) {
+        fetch(`/api/admin/movies/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+        })
+        .then(() => loadMoviesAdmin());
+    }
+
+    function editMovie(id) {
+        fetch(`/api/admin/movies/${id}`, {
+            headers: { "Authorization": "Bearer " + token }
+        })
+        .then(res => res.json())
+        .then(movie => {
+            document.getElementById("adminContent").innerHTML = `
+                <h3>Edit Movie</h3>
+                <input id="title" value="${movie.title}"><br><br>
+                <input id="genre" value="${movie.genre}"><br><br>
+                <input id="duration" value="${movie.duration}"><br><br>
+                <input id="price" value="${movie.price}"><br><br>
+                <input id="code" value="${movie.code}"><br><br>
+                <button class="btn-yellow" onclick="updateMovie(${id})">Save</button>
+                <button class="btn-red" onclick="loadMoviesAdmin()">Cancel</button>
+            `;
+        });
+    }
+
+    function updateMovie(id) {
+        const movie = {
+            title: document.getElementById("title").value,
+            genre: document.getElementById("genre").value,
+            duration: document.getElementById("duration").value,
+            price: document.getElementById("price").value,
+            code: document.getElementById("code").value
+        };
+
+        fetch(`/api/admin/movies/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify(movie)
+        })
+        .then(() => loadMoviesAdmin());
+    }
+
+    // ================= OFFER =================
+    function showOfferForm() {
+        document.getElementById("adminContent").innerHTML = `
+            <h3>Create Offer</h3>
+            <textarea id="offerMessage" rows="5" style="width:100%"></textarea><br><br>
+            <button class="btn-yellow" onclick="sendOffer()">Send Offer</button>
+        `;
+    }
+
+    function sendOffer() {
+        const message = document.getElementById("offerMessage").value;
+
+        fetch("/api/admin/offer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ message })
+        })
+        .then(() => alert("Offer Sent Successfully!"));
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/index.html";
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- 🔒 Prevent direct access without login -->
+    <script>
+        if (!localStorage.getItem("token")) {
+            window.location.href = "auth/auth.html";
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="full-center">
+    <div class="card">
+        <h2>Payment</h2>
+
+        <select id="mode" onchange="togglePaymentFields(this.value)">
+            <option value="">Select Payment Mode</option>
+            <option>UPI</option>
+            <option>Credit Card</option>
+            <option>Debit Card</option>
+        </select>
+
+        <div id="upiDetails" class="payment-section" style="display:none;">
+            <input id="upiId" placeholder="Enter UPI ID">
+        </div>
+
+        <div id="cardDetails" class="payment-section" style="display:none;">
+            <input id="cardNumber" placeholder="Card Number" maxlength="19">
+            <input id="expDate" placeholder="Expiry MM/YY" maxlength="5">
+            <input id="cvv" placeholder="CVV" maxlength="3">
+        </div>
+
+        <div id="offerBox" class="offer-box">
+            <h3>Special Offers</h3>
+            <ul id="offerList">
+                <li>Use HDFC Bank Card & get 10% OFF</li>
+                <li>Buy 2 tickets & get 50 cashback</li>
+                <li>Pay via UPI & get 20 instant discount</li>
+            </ul>
+        </div>
+
+        <button class="btn-red" onclick="pay()">Pay Now</button>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+function togglePaymentFields(value) {
+    document.getElementById("upiDetails").style.display =
+        value === "UPI" ? "block" : "none";
+
+    document.getElementById("cardDetails").style.display =
+        (value === "Credit Card" || value === "Debit Card") ? "block" : "none";
+}
+
+// Auto-format card number
+document.getElementById("cardNumber")?.addEventListener("input", e => {
+    let v = e.target.value.replace(/\D/g, "");
+    e.target.value = v.match(/.{1,4}/g)?.join(" ") || "";
+});
+
+// Auto-format expiry
+document.getElementById("expDate")?.addEventListener("input", e => {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length >= 3) v = v.slice(0,2) + "/" + v.slice(2,4);
+    e.target.value = v;
+});
+</script>
+
+<script src="/js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking History</title>
+    <style>
+        body {
+            background: #111;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+        }
+        .card {
+            background: #222;
+            padding: 15px;
+            margin: 15px auto;
+            width: 80%;
+            border-radius: 8px;
+        }
+        button {
+            background: red;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+	<h2>Your Booking History</h2>
+	<table id="historyTable">
+	    <thead>
+	        <tr>
+	            <th>Movie</th>
+	            <th>Theatre</th>
+	            <th>Seats</th>
+	            <th>Show Time</th>
+	            <th>Total</th>
+	            <th>Action</th>
+	        </tr>
+	    </thead>
+	    <tbody></tbody>
+	</table>
+
+	<script>
+	const mobile = localStorage.getItem("mobile");
+
+	fetch(`http://localhost:8080/api/bookings/history?mobile=${mobile}`, {
+	    headers: {
+	        "Authorization": "Bearer " + localStorage.getItem("token")
+	    }
+	})
+	    .then(r => r.json())
+	    .then(bookings => {
+	        const tbody = document.querySelector("#historyTable tbody");
+	        tbody.innerHTML = "";
+	        bookings.forEach(b => {
+	            const tr = document.createElement("tr");
+	            tr.innerHTML = `
+	                <td>${b.movieTitle}</td>
+	                <td>${b.theatre}</td>
+	                <td>${b.seatNumbers}</td>
+	                <td>${b.showTime}</td>
+	                <td>${b.totalAmount}</td>
+	                <td>
+	                    <button onclick="cancelBooking(${b.id})">Cancel</button>
+	                </td>
+	            `;
+	            tbody.appendChild(tr);
+	        });
+	    });
+
+	function cancelBooking(id) {
+		fetch(`http://localhost:8080/api/bookings/cancel/${id}`, {
+		    method: 'DELETE',
+		    headers: {
+		        "Authorization": "Bearer " + localStorage.getItem("token")
+		    }
+		})
+	        .then(r => r.text())
+	        .then(msg => {
+	            alert(msg);
+	            location.reload();
+	        });
+	}
+	</script>
+
+
+</body>
+</html>

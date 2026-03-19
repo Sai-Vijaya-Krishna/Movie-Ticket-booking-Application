@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Movie</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- 🔒 Prevent direct access without login -->
+    <script>
+        if (!localStorage.getItem("token")) {
+            window.location.href = "auth/auth.html";
+        }
+    </script>
+</head>
+<body>
+
+<div class="full-center">
+    <div class="container card">
+        <h2>Select Movie & Show Time</h2>
+        <div id="moviesContainer"></div>
+    </div>
+</div>
+
+<div id="offerBlock"
+style="background:gold;padding:10px;color:black;
+font-weight:bold;display:none;margin-bottom:10px;">
+</div>
+
+<script>
+    const container = document.getElementById("moviesContainer");
+
+    fetch("http://localhost:8080/api/movies")
+        .then(res => {
+            if (!res.ok) throw new Error("Failed to fetch movies");
+            return res.json();
+        })
+        .then(movies => {
+            container.innerHTML = "";
+
+            if (movies.length === 0) {
+                container.innerHTML = "<p>No movies available</p>";
+                return;
+            }
+
+            movies.forEach(movie => {
+                const div = document.createElement("div");
+                div.className = "card";
+
+                div.innerHTML = `
+                    <h3>${movie.title}</h3>
+                    <p>${movie.genre}</p>
+                    <p>${movie.duration} mins</p>
+                `;
+
+                ["10:00 AM","1:30 PM", "6:00 PM"].forEach(time => {
+                    const btn = document.createElement("button");
+                    btn.className = "btn-yellow";
+                    btn.innerText = time;
+                    btn.onclick = () => selectMovie(movie.id, movie.title, time);
+                    div.appendChild(btn);
+                });
+
+                container.appendChild(div);
+            });
+        })
+        .catch(err => {
+            container.innerHTML = "<p>Failed to load movies</p>";
+            console.error(err);
+        });
+
+    function selectMovie(movieId, movieTitle, time) {
+        localStorage.setItem("movieId", movieId);
+        localStorage.setItem("movie", movieTitle);
+        localStorage.setItem("time", time);
+        window.location.href = "seats.html";
+    }
+</script>
+
+</body>
+</html>

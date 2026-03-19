@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Theatre</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- 🔒 Prevent direct access without login -->
+    <script>
+        if (!localStorage.getItem("token")) {
+            window.location.href = "auth/auth.html";
+        }
+    </script>
+</head>
+<body>
+
+<div class="full-center">
+    <div class="container card">
+        <h2>Select Theatre</h2>
+        <div id="theatreContainer"></div>
+    </div>
+</div>
+
+<script>
+const theatres = {
+    "Chennai": ["PVR", "INOX", "Sathyam"],
+    "Bangalore": ["PVR", "INOX", "Carnival"],
+    "Hyderabad": ["PVR", "INOX"],
+    "Mumbai": ["PVR", "Cinepolis"]
+};
+
+const city = localStorage.getItem("location");
+const container = document.getElementById("theatreContainer");
+
+if(theatres[city]) {
+    theatres[city].forEach(th => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerText = th;
+        div.onclick = () => {
+            localStorage.setItem("theatre", th);
+            window.location.href = "movies.html";
+        };
+        container.appendChild(div);
+    });
+} else {
+    container.innerHTML = "<p>No theatres available for this city</p>";
+}
+</script>
+
+</body>
+</html>

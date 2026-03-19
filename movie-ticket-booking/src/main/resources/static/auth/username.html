@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Username</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="full-center">
+    <div class="container card">
+        <h2>Create Username</h2>
+        <input id="username" placeholder="Enter Username">
+        <button class="btn-yellow" onclick="saveUsername()">Continue</button>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+    // ========================
+    // SAVE USERNAME
+    // ========================
+    function saveUsername() {
+        const username = document.getElementById("username").value.trim();
+
+        if (!username) {
+            alert("Enter username");
+            return;
+        }
+
+        localStorage.setItem("username", username);
+
+        // Redirect to correct folder
+        window.location.href = "/booking/location.html";
+    }
+</script>
+</body>
+</html>

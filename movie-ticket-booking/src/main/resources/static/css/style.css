@@ -1,0 +1,249 @@
+/* ==========================
+   GLOBAL STYLES
+========================== */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5c518, #ffffff);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.full-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    background: #111;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h2, h3 {
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+/* ==========================
+   INPUTS & SELECTS
+========================== */
+input, select {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: #222;
+    color: #fff;
+}
+
+input::placeholder {
+    color: #bbb;
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+button {
+    width: 95%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: transform 0.2s, opacity 0.2s, background 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.btn-yellow {
+    background: #f5c518;
+    color: #000;
+}
+
+.btn-red {
+    background: #e50914;
+    color: #fff;
+}
+/* ==========================
+   TOAST NOTIFICATION
+========================== */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #222;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ==========================
+   CARDS
+========================== */
+.card {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    background: #333;
+}
+
+/* ==========================
+   SEAT SELECTION
+========================== */
+#seatMap {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.seat-row {
+    margin-bottom: 10px;
+}
+
+.seat {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    margin: 3px;
+    background-color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 35px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.seat.selected {
+    background-color: #f5c518;
+    color: black;
+}
+
+.seat.occupied {
+    background-color: #e50914;
+    cursor: not-allowed;
+}
+
+/* ==========================
+   PAYMENT PAGE STYLING
+========================== */
+.offer-box {
+    background: #222;
+    border: 2px solid yellow;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    animation: blink 2s infinite;
+}
+
+.offer-box h3 {
+    color: yellow;
+}
+
+.offer-box ul {
+    padding-left: 20px;
+}
+
+.offer-box li {
+    margin-bottom: 6px;
+}
+
+@keyframes blink {
+    0% { border-color: yellow; }
+    50% { border-color: orange; }
+    100% { border-color: yellow; }
+}
+
+.payment-field {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    background: #222;
+    color: #fff;
+}
+
+.payment-field::placeholder {
+    color: #bbb;
+}
+
+/* Hide/Show Card & UPI Fields */
+#cardDetails, #upiDetails {
+    display: none;
+}
+
+/* ==========================
+   SUCCESS PAGE
+========================== */
+.success-detail {
+    text-align: left;
+    background: #111;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.success-detail b {
+    color: #f5c518;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+@media (max-width: 500px) {
+    .container {
+        padding: 20px;
+    }
+
+    input, select, button {
+        width: 100%;
+    }
+
+    .seat {
+        width: 28px;
+        height: 28px;
+        margin: 2px;
+        line-height: 28px;
+        font-size: 12px;
+    }
+}
